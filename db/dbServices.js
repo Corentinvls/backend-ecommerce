@@ -98,3 +98,10 @@ async function push(collection,id, objectModif) {
 //update("products","5fabfbce9f2d076e94e1819d",modif).then()
 
 //push("products","5fabfbce9f2d076e94e1819d",toPush).then()
+
+exports.create=create
+exports.searchBy=searchBy
+exports.getById=getById
+exports.list=list
+exports.update=update
+exports.push=push
