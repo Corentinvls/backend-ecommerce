@@ -46,7 +46,9 @@ async function searchByTitle(title) {
     await client.connect()
     const db = client.db('LeBonCovid')
     const products = db.collection('products')
-    return await products.find({title: {$regex: title}}).toArray()
+    const product= await products.find({title: {$regex: title}}).toArray()
+    console.log(product);
+    return product
 
 }
 
@@ -54,7 +56,9 @@ async function getById(id) {
     await client.connect()
     const db = client.db('LeBonCovid')
     const products = db.collection('products')
-    return await products.findOne({"_id": new ObjectId(id)})
+    const product= await products.findOne({"_id": new ObjectId(id)})
+    console.log(product);
+    return product
 
 }
 
@@ -62,7 +66,9 @@ async function list() {
     await client.connect()
     const db = client.db('LeBonCovid')
     const products = db.collection('products')
-    return await products.find().toArray()
+    const product= await products.find().toArray()
+    console.log(product);
+    return product
 }
 
 async function update(id, objectModif) {
@@ -84,10 +90,10 @@ async function push(id, objectModif) {
 //create(product).catch()
 
 //searchByTitle("te").then()
-//getById("5fabe7ae0f1b606b18b11341").then()
+//getById("5fabf3e782c0e56d35adcc73").then()
 
-//listProducts().catch()
+//list().catch()
 
-//update("5fabeb5ef490db6ba6896087",modif).then()
+//update("5fabf3e782c0e56d35adcc73",modif).then()
 
-//push("5fabefd9a85b9f6c1e7958d5",toPush).then()
+//push("5fabf3e782c0e56d35adcc73",toPush).then()
