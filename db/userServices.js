@@ -59,11 +59,6 @@ async function searchByName(lastname) {
     return product
 }
 
-async function t(){
-    await client.connect()
-
-}
-
 async function getById(id) {
     await client.connect()
     const db = client.db('LeBonCovid')
