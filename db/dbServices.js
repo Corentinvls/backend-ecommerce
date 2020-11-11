@@ -31,7 +31,7 @@ const modif = {
 }
 
 const toPush = {
-    ratings:{rating:5,}
+    ratings:{rating:2}
 }
 
 async function create(collection,object) {
@@ -57,6 +57,7 @@ async function getById(collection,id) {
     await client.connect()
     const db = client.db('LeBonCovid')
     const dbPath = db.collection(collection)
+    console.log(id)
     const result= await dbPath.findOne({"_id": new ObjectId(id)})
     console.log(result);
     return result
