@@ -46,9 +46,8 @@ async function update(id, objectModif) {
     await client.connect()
     const db = client.db('LeBonCovid')
     const products = db.collection('users')
-    const product = await products.updateOne({"_id":  new ObjectId(id)}, {$set: objectModif})
-    console.log(product);
-    return product
+    await products.updateOne({"_id":  new ObjectId(id)}, {$set: objectModif})
+
 }
 
 async function searchByName(lastname) {
@@ -69,13 +68,12 @@ async function getById(id) {
     await client.connect()
     const db = client.db('LeBonCovid')
     const products = db.collection('users')
-    const product = await products.findOne({"_id" :new ObjectId("5fabe2ad37798f6fca7adf05")})
+    const product = await products.findOne({"_id" :new ObjectId(id)})
     console.log(product);
     return product
 }
 
-// create(user).catch()
-// update('5fabedc642e57e7127f62bd0',modif).catch()
-searchByName("B").then()
-
-// getById("5fabc6d6fd4b9666f2e81fb8").then()
+//create(user).catch()
+//update('5fabf60c95230b6da8033ca1',modif).catch()
+//searchByName("B").then()
+//getById("5fabf60c95230b6da8033ca1").then()
