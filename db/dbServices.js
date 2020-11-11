@@ -73,19 +73,19 @@ async function list(collection) {
 }
 
 async function update(collection,id, objectModif) {
-
     createAndUpdateAt(objectModif);
     await client.connect()
     const db = client.db('LeBonCovid')
     const dbPath = db.collection(collection)
-    await dbPath.updateOne({"_id":  new ObjectId(id)}, {$set: objectModif})
+    await dbPath.updateOne({"_id":  new ObjectId(id)}, {$set: objectModif}).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
 async function push(collection,id, objectModif) {
     await client.connect()
     const db = client.db('LeBonCovid')
     const dbPath = db.collection(collection)
-    await dbPath.updateOne({_id:  new ObjectId(id)}, {$set:{"updatedAt":new Date()},$push: objectModif})
+    await dbPath.updateOne({_id:  new ObjectId(id)}, {$set:{"updatedAt":new Date()},$push: objectModif}).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
+
 
 
 //create("products",product).catch()
@@ -97,4 +97,4 @@ async function push(collection,id, objectModif) {
 
 //update("products","5fabfbce9f2d076e94e1819d",modif).then()
 
-push("products","5fabfbce9f2d076e94e1819d",toPush).then()
+//push("products","5fabfbce9f2d076e94e1819d",toPush).then()
