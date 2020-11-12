@@ -75,6 +75,16 @@ async function searchBy(collection,field,search) {
     console.log(result);
     return result
 }
+async function checkIfUserExist(field,search) {
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection("users")
+    var query = {};
+    query[field] =  search;
+    const result= await dbPath.findOne(query)
+    console.log(result !== null);
+    return result !== null
+}
 
 async function getById(collection,id) {
     await client.connect()
@@ -92,6 +102,7 @@ async function list(collection) {
     const db = client.db('LeBonCovid')
     const dbPath = db.collection(collection)
     const result= await dbPath.find().toArray()
+
     console.log(result);
     return result
 }
@@ -112,8 +123,8 @@ async function push(collection,id, objectModif) {
 
 
 
-//create("products",product).catch()
-
+//create("users",user).catch()
+checkIfUserExist("email","usa@gmail.co").catch()
 //searchBy("products","title","te").then()
 //getById("products","5fabf9df51b7ba6e5191580e").then()
 
@@ -129,3 +140,4 @@ exports.getById=getById
 exports.list=list
 exports.update=update
 exports.push=push
+exports.checkIfUserExist=checkIfUserExist

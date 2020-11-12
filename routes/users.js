@@ -40,5 +40,11 @@ router.patch('/push/:id', async (req, res) => {
     res.json("done")
 })
 
+//check if exist
+router.get('/exist/:field&:search', async (req, res) => {
+    const field = req.params.field
+    const search = req.params.search
+    await res.json(await dbServices.checkIfUserExist(field, search));
+})
 
 module.exports = router;
