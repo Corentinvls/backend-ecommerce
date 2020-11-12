@@ -3,6 +3,17 @@ const {MongoClient, ObjectId} = require('mongodb')
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost/LeBonCovid'
 const {createAndUpdateAt} = require('./utils')
 const client = new MongoClient(MONGO_URI)
+const bcrypt = require('bcrypt')
+
+
+function hashPassword(password) {
+    // const hash = crypto.createHash('sha256',password)
+    // // hash.update(password)
+    // console.log(password)
+    // return hash.digest('hex')
+
+
+}
 
 
 const product = {
@@ -56,7 +67,19 @@ const modif = {
 const toPush = {
     ratings:{rating:2}
 }
+async function createUser(object) {
+    createAndUpdateAt(object, true)
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection("users")
+    const saltRounds = 10;
+    const password = object.password
+    await bcrypt.hash(password, saltRounds, (err, hash) => {
+        object.password = hash
+        dbPath.insertOne(object).then((e) => console.log("New user created : " + e.ops[0]._id)).catch((e) => console.log(e))
+    })
 
+}
 async function create(collection,object) {
     createAndUpdateAt(object,true)
     await client.connect()
@@ -102,7 +125,6 @@ async function list(collection) {
     const db = client.db('LeBonCovid')
     const dbPath = db.collection(collection)
     const result= await dbPath.find().toArray()
-
     console.log(result);
     return result
 }
@@ -135,6 +157,7 @@ checkIfUserExist("email","usa@gmail.co").catch()
 //push("products","5fabfbce9f2d076e94e1819d",toPush).then()
 
 exports.create=create
+exports.createUser=createUser
 exports.searchBy=searchBy
 exports.getById=getById
 exports.list=list
