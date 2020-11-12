@@ -47,4 +47,6 @@ router.get('/exist/:field&:search', async (req, res) => {
     await res.json(await dbServices.checkIfUserExist(field, search));
 })
 
+router.get
+
 module.exports = router;
