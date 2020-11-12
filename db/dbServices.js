@@ -16,10 +16,10 @@ const product = {
         "stripe"
     ],
     image_url: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
-    ratings: [],
-    categories: [],
-    type: 1,
-    seller_id: "1"
+    ratings: [{rating:2,pseudo:"franky",comment:"that's weird"}],
+    categories: ["adventure","rpg","sexe","drogue","alcool","politiquement incorrect"],
+    type: "game",
+    seller_pseudo: "jackylamoule"
 }
 const modif = {
     title: "couilles",
