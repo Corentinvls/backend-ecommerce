@@ -67,16 +67,16 @@ const modif = {
 const toPush = {
     ratings:{rating:2}
 }
-async function createUser(object) {
-    createAndUpdateAt(object, true)
+async function createUser(user) {
+    createAndUpdateAt(user, true)
     await client.connect()
     const db = client.db('LeBonCovid')
     const dbPath = db.collection("users")
     const saltRounds = 10;
-    const password = object.password
+    const password = user.password
     await bcrypt.hash(password, saltRounds, (err, hash) => {
-        object.password = hash
-        dbPath.insertOne(object).then((e) => console.log("New user created : " + e.ops[0]._id)).catch((e) => console.log(e))
+        user.password = hash
+        dbPath.insertOne(user).then((e) => console.log("New user created : " + e.ops[0]._id)).catch((e) => console.log(e))
     })
 
 }
@@ -146,7 +146,7 @@ async function push(collection,id, objectModif) {
 
 
 //create("users",user).catch()
-checkIfUserExist("email","usa@gmail.co").catch()
+//checkIfUserExist("email","usa@gmail.co").catch()
 //searchBy("products","title","te").then()
 //getById("products","5fabf9df51b7ba6e5191580e").then()
 

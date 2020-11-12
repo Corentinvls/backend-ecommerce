@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     user.money_spend = 0;
     user.money = 0;
     user.avatar = "https://www.marshall.edu/it/files/question-mark-circle-icon.png";
-    await dbServices.create("users", user)
+    await dbServices.createUser(user)
     res.send("done")
 })
 router.get('/search/:field&:search', async (req, res, next) => {
