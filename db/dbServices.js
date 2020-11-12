@@ -8,7 +8,8 @@ const client = new MongoClient(MONGO_URI)
 const product = {
     title: "chatte",
     description: "This is a _example_ description",
-    price: "12.99",
+    price: 12.99,
+    ref:"AZERTY19COVID",
     gateways: [
         "paypal",
         "bitcoin",
@@ -17,9 +18,31 @@ const product = {
     ],
     image_url: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
     ratings: [{rating:2,pseudo:"franky",comment:"that's weird"}],
-    categories: ["adventure","rpg","sexe","drogue","alcool","politiquement incorrect"],
+    categories: ["adventure","rpg"],
     type: "game",
-    seller_pseudo: "jackylamoule"
+    seller_pseudo: "jackylamoule",
+    add_to_cart:0,
+    sells:0
+
+}
+const user={
+    lastname: "Bidden",
+    firstname: "Joe",
+    pseudo:"usaFever",
+    password:'fuckTrump',
+    email:'usa@gmail.com',
+    group: [
+        'seller',
+        'buyer',
+    ],
+    order:[],
+    products:[],
+    products_sells:[],
+    cart:[],
+    money_earn:0,
+    money_spend:0,
+    money: 10000000000,
+    avatar:"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
 }
 const modif = {
     title: "couilles",
