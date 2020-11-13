@@ -43,7 +43,7 @@ async function testCreateProduct() {
             ratings: [],
             categories: ["masque", "santé"],
             type: "book",
-            seller_pseudo: "DDRaoult",
+            seller_pseudo: "DéDéRaoult",
             sells: 0
         })
         .then(function(response) {
@@ -116,6 +116,6 @@ async function testAddMoney(user,money) {
       .catch(()=>{
           console.log("try to reload server");})*/
 //testCreateUser().then()
-//testCreateProduct().then()
+testCreateProduct().then()
 //testAddToCart("5fad83ff57b5fdbadca5156b").then()
-testAddMoney("5fad83ff57b5fdbadca5156b",-1000).then()
+//testAddMoney("5fad83ff57b5fdbadca5156b",-1000).then()

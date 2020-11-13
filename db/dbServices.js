@@ -130,14 +130,13 @@ async function push(collection, id, objectModif) {
     }).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
 
-async function filterPrice(collection,filter){
-    await client.connect()
-    const db = client.db('LeBonCovid')
+async function filterLTEPrice(collection,filter){
+    const db = await getConnection()
     const dbPath = db.collection(collection)
-    const result = await dbPath.findOne({"price":{$lt : filter}})
-    console.log(result);
-    return result
+    return await dbPath.find({"price":{$lte : filter}}).toArray()
 }
+
+
 
 
 async function listOfOrdersProducts(id, sort) {
@@ -223,3 +222,4 @@ exports.getBy = getBy
 exports.showProductsByCategorie =showProductsByCategorie
 exports.showDistinct =showDistinct
 exports.listOfOrdersProducts=listOfOrdersProducts
+exports.filterLTEPrice=filterLTEPrice
