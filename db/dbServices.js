@@ -1,63 +1,13 @@
 require('dotenv').config()
-const crypto = require('crypto')
+
 const {MongoClient, ObjectId} = require('mongodb')
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost/LeBonCovid'
 const {createAndUpdateAt} = require('./utils')
 const client = new MongoClient(MONGO_URI)
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
 
-const product = {
-    title: "chatte",
-    description: "This is a _example_ description",
-    price: 12.99,
-    ref: "AZERTY19COVID",
-    gateways: [
-        "paypal",
-        "bitcoin",
-        "ethereum",
-        "stripe"
-    ],
-    image_url: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
-    ratings: [{rating: 2, pseudo: "franky", comment: "that's weird"}],
-    categories: ["adventure", "rpg"],
-    type: "game",
-    seller_pseudo: "jackylamoule",
-    add_to_cart: 0,
-    sells: 0
-
-}
-const user = {
-    lastname: "Bidden",
-    firstname: "Joe",
-    pseudo: "usaFever",
-    password: 'fuckTrump',
-    email: 'usa@gmail.com',
-    group: [
-        'seller',
-        'buyer',
-    ],
-    order: [],
-    products: [],
-    products_sells: [],
-    cart: [],
-    money_earn: 0,
-    money_spend: 0,
-    money: 10000000000,
-    avatar: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
-}
-const modif = {
-    title: "couilles",
-    description: "This is a couille",
-    price: "69.99",
-    gateways: [
-        "en nature"
-    ]
-}
-
-const toPush = {
-    ratings: {rating: 2}
-}
 
 async function createUser(user) {
     createAndUpdateAt(user, true)
@@ -78,13 +28,9 @@ async function logUser(username, password) {
     const match = await bcrypt.compare(password, passwordHash);
     if (match) {
         console.log("cest le bon pass")
-        const token = crypto.randomBytes(40).toString('hex')
-        console.log({success: true,token})
     }else{
         console.log("FAUX")
     }
-
-    //...
 }
 
 async function create(collection, object) {
@@ -152,6 +98,12 @@ async function update(collection, id, objectModif) {
     const dbPath = db.collection(collection)
     await dbPath.updateOne({"_id": new ObjectId(id)}, {$set: objectModif}).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
+async function remove(collection, id) {
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection(collection)
+    await dbPath.deleteOne({"_id": new ObjectId(id)})
+}
 
 async function push(collection, id, objectModif) {
     await client.connect()
@@ -175,7 +127,9 @@ async function push(collection, id, objectModif) {
 
 //push("products","5fabfbce9f2d076e94e1819d",toPush).then()
 
-logUser("zef", "Azerty1").then( )
+//remove("users","5fad57dd21a816b625d97b0e").then()
+
+//logUser("zef", "Azerty1").then( )
 
 exports.create = create
 exports.createUser = createUser
@@ -186,3 +140,4 @@ exports.update = update
 exports.push = push
 exports.checkIfUserExist = checkIfUserExist
 exports.logUser=logUser
+exports.remove=remove

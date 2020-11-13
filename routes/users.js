@@ -46,7 +46,27 @@ router.get('/exist/:field&:search', async (req, res) => {
     const search = req.params.search
     await res.json(await dbServices.checkIfUserExist(field, search));
 })
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id
+    await dbServices.remove("users", id)
+    res.json("done")
+})
 
-router.get
+router.patch('/addToCart/:userId', async (req, res) => {
+    const product = req.body
+    const userId = req.params.userId
+    await dbServices.push("users", userId, {cart:product})
+    res.json("done")
+})
+
+/*router.patch('/buy/:userId', async (req, res) => {
+    const product = req.body
+    const userId = req.params.userId
+    const user =await dbServices.getById("users", userId)
+    const productsInCart= user.cart
+
+    await dbServices.push("users", userId, {orders:})
+    res.json("done")
+})*/
 
 module.exports = router;
