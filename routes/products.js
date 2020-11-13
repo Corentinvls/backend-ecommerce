@@ -32,5 +32,13 @@ router.patch('/push/:id', async (req, res) => {
   res.json("done")
 })
 
+router.get('/getBy/:field&:search', async (req, res, next) =>{
+  const field = req.params.field
+  const search = req.params.search
+  console.log(field);
+  console.log(search);
+  res.json( await dbServices.getBy("products",field,search));
+});
+
 
 module.exports = router;

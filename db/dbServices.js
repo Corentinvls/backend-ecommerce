@@ -218,6 +218,7 @@ exports.checkIfUserExist = checkIfUserExist
 exports.logUser = logUser
 exports.remove = remove
 exports.increment = increment
+
 exports.getBy = getBy
 exports.showProductsByCategorie =showProductsByCategorie
 exports.showDistinct =showDistinct
