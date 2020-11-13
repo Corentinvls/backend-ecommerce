@@ -2,15 +2,15 @@ require('dotenv').config()
 const crypto = require('crypto')
 const {MongoClient, ObjectId} = require('mongodb')
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost/LeBonCovid'
-const {createAndUpdateAt} = require('./utils')
+const {createAndUpdateAt} = require('../db/utils')
 const client = new MongoClient(MONGO_URI)
 const bcrypt = require('bcrypt')
 
 
 const product = {
-    title: "chatte",
-    description: "This is a _example_ description",
-    price: 12.99,
+    title: "sample3",
+    description: "This is a _example3_ description",
+    price: 10.99,
     ref: "AZERTY19COVID",
     gateways: [
         "paypal",
@@ -21,7 +21,7 @@ const product = {
     image_url: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
     ratings: [{rating: 2, pseudo: "franky", comment: "that's weird"}],
     categories: ["adventure", "rpg"],
-    type: "game",
+    type: "service",
     seller_pseudo: "jackylamoule",
     add_to_cart: 0,
     sells: 0
@@ -29,7 +29,7 @@ const product = {
 }
 const user = {
     lastname: "Bidden",
-    firstname: "Joe",
+    firstname: "joe",
     pseudo: "usaFever",
     password: 'fuckTrump',
     email: 'usa@gmail.com',
@@ -37,7 +37,11 @@ const user = {
         'seller',
         'buyer',
     ],
-    order: [],
+    order: [
+        new ObjectId('5fae3a715cb4d1a92a90b7f2'),
+        'sample',
+        'cccccccc'
+    ],
     products: [],
     products_sells: [],
     cart: [],
@@ -47,12 +51,11 @@ const user = {
     avatar: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
 }
 const modif = {
-    title: "couilles",
-    description: "This is a couille",
-    price: "69.99",
-    gateways: [
-        "en nature"
-    ]
+    order: [
+        'sample2',
+        'sample',
+        'sample3'
+    ],
 }
 
 const toPush = {
@@ -79,8 +82,8 @@ async function logUser(username, password) {
     if (match) {
         console.log("cest le bon pass")
         const token = crypto.randomBytes(40).toString('hex')
-        console.log({success: true,token})
-    }else{
+        console.log({success: true, token})
+    } else {
         console.log("FAUX")
     }
 
@@ -145,6 +148,30 @@ async function list(collection) {
     return result
 }
 
+async function listOfOrdersProducts(id, sort) {
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection('users')
+    const result = await
+        dbPath.aggregate([
+            {$unwind: '$order'},
+            {$match: {"_id": new ObjectId(id)}},
+            {
+                $lookup: {
+                    from: 'products',
+                    localField:'order',
+                    foreignField:'title',
+                    as:'infoList'
+                }
+            },
+            {$unwind: '$infoList'},
+            {$project: {order: 1, _id: 0,infoList:{title:1,description: 1,price:1,ref:1,image_url: 1,categories: 1,type: 1}}},
+            {$sort: {order: sort}}
+        ]).toArray()
+    console.log(result)
+    return result
+}
+
 async function update(collection, id, objectModif) {
     createAndUpdateAt(objectModif);
     await client.connect()
@@ -164,14 +191,16 @@ async function push(collection, id, objectModif) {
 }
 
 
-create("users",user).catch()
+// create("products",product).catch()
 //checkIfUserExist("email","usa@gmail.co").catch()
 //searchBy("products","title","te").then()
 //getById("products","5fabf9df51b7ba6e5191580e").then()
 
-//list("products").catch()
+// list("products").catch()
 
-//update("products","5fabfbce9f2d076e94e1819d",modif).then()
+listOfOrdersProducts('5fae3a60035237a923dbc55d', -1).then()
+
+// update("users","5fae3a60035237a923dbc55d",modif).then()
 
 //push("products","5fabfbce9f2d076e94e1819d",toPush).then()
 
@@ -185,4 +214,4 @@ exports.list = list
 exports.update = update
 exports.push = push
 exports.checkIfUserExist = checkIfUserExist
-exports.logUser=logUser
+exports.logUser = logUser
