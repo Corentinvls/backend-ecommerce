@@ -8,11 +8,14 @@ const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 
 
+async function getConnection() {
+    await client.connect()
+    return client.db('LeBonCovid')
+}
 
 async function createUser(user) {
     createAndUpdateAt(user, true)
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection("users")
     const saltRounds = 10;
     const password = user.password
@@ -22,6 +25,15 @@ async function createUser(user) {
     })
 }
 
+async function getBy(collection, field, search) {
+    const db = await getConnection()
+    const dbPath = db.collection(collection)
+    var query = {};
+    query[field] = search;
+    const result = await dbPath.find(query).toArray()
+    console.log(result)
+}
+
 async function logUser(username, password) {
     //... fetch user from a db etc.
     let passwordHash = await findUserPassword(username)
@@ -29,23 +41,21 @@ async function logUser(username, password) {
     if (match) {
         console.log("cest le bon pass")
         const token = crypto.randomBytes(40).toString('hex')
-        console.log({success: true,token})
-    }else{
+        console.log({success: true, token})
+    } else {
         console.log("FAUX")
     }
 }
 
 async function create(collection, object) {
     createAndUpdateAt(object, true)
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
     await dbPath.insertOne(object).then((e) => console.log("New " + collection + " created : " + e.ops[0]._id)).catch((e) => console.log(e))
 }
 
 async function searchBy(collection, field, search) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
     var query = {};
     query[field] = {$regex: search};
@@ -55,8 +65,7 @@ async function searchBy(collection, field, search) {
 }
 
 async function checkIfUserExist(field, search) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection("users")
     var query = {};
     query[field] = search;
@@ -66,16 +75,14 @@ async function checkIfUserExist(field, search) {
 }
 
 async function findUserPassword(search) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection("users")
     const result = await dbPath.findOne({$or: [{email: search}, {pseudo: search}]})
     return result.password
 }
 
 async function getById(collection, id) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
     console.log(id)
     const result = await dbPath.findOne({"_id": new ObjectId(id)})
@@ -85,8 +92,7 @@ async function getById(collection, id) {
 }
 
 async function list(collection) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
     const result = await dbPath.find().toArray()
     console.log(result);
@@ -95,32 +101,78 @@ async function list(collection) {
 
 async function update(collection, id, objectModif) {
     createAndUpdateAt(objectModif);
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
     await dbPath.updateOne({"_id": new ObjectId(id)}, {$set: objectModif}).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
+
 async function increment(collection, id, objectModif) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
-    await dbPath.updateOne({"_id": new ObjectId(id)}, { $set: {"updatedAt": new Date()},$inc: objectModif}).then((e) => console.log(e.result)).catch((e) => console.log(e))
+    await dbPath.updateOne({"_id": new ObjectId(id)}, {
+        $set: {"updatedAt": new Date()},
+        $inc: objectModif
+    }).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
+
 async function remove(collection, id) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
     await dbPath.deleteOne({"_id": new ObjectId(id)})
 }
 
 async function push(collection, id, objectModif) {
-    await client.connect()
-    const db = client.db('LeBonCovid')
+    const db = await getConnection()
     const dbPath = db.collection(collection)
     await dbPath.updateOne({_id: new ObjectId(id)}, {
         $set: {"updatedAt": new Date()},
         $push: objectModif
     }).then((e) => console.log(e.result)).catch((e) => console.log(e))
+}
+
+
+async function listOfOrdersProducts(id, sort) {
+    const db = await getConnection()
+    const dbPath = db.collection('users')
+    const result = await
+        dbPath.aggregate([
+            {$unwind: '$order'},
+            {$match: {"_id": new ObjectId(id)}},
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'order',
+                    foreignField: 'title',
+                    as: 'infoList'
+                }
+            },
+            {$unwind: '$infoList'},
+            {
+                $project: {
+                    order: 1,
+                    _id: 0,
+                    infoList: {title: 1, description: 1, price: 1, ref: 1, image_url: 1, categories: 1, type: 1}
+                }
+            },
+            {$sort: {order: sort}}
+        ]).toArray()
+    console.log(result)
+    return result
+}
+
+async function showDistinct(collection, element) {
+    const db = await getConnection()
+    const dbPath = db.collection(collection)
+    const result = await dbPath.distinct(element)
+    console.log(result)
+}
+
+async function showProductsByCategorie(categorie) {
+    const db = await getConnection()
+    const dbPath = db.collection('products')
+    const result = await
+        dbPath.find({categories: categorie}).toArray()
+    console.log(result)
 }
 
 
@@ -139,6 +191,12 @@ async function push(collection, id, objectModif) {
 
 //logUser("zef", "Azerty1").then( )
 
+// showProductsByCategorie('adventure')
+
+// showDistinct('products','title')
+
+//getBy('products','type','service')
+
 exports.create = create
 exports.createUser = createUser
 exports.searchBy = searchBy
@@ -147,6 +205,10 @@ exports.list = list
 exports.update = update
 exports.push = push
 exports.checkIfUserExist = checkIfUserExist
-exports.logUser=logUser
-exports.remove=remove
+exports.logUser = logUser
+exports.remove = remove
 exports.increment = increment
+exports.getBy = getBy
+exports.showProductsByCategorie =showProductsByCategorie
+exports.showDistinct =showDistinct
+exports.listOfOrdersProducts=listOfOrdersProducts
