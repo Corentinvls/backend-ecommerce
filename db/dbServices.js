@@ -130,6 +130,15 @@ async function push(collection, id, objectModif) {
     }).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
 
+async function filterPrice(collection,filter){
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection(collection)
+    const result = await dbPath.findOne({"price":{$lt : filter}})
+    console.log(result);
+    return result
+}
+
 
 async function listOfOrdersProducts(id, sort) {
     const db = await getConnection()
@@ -196,6 +205,8 @@ async function showProductsByCategorie(categorie) {
 // showDistinct('products','title')
 
 //getBy('products','type','service')
+
+//filterPrice("products",10).catch()
 
 exports.create = create
 exports.createUser = createUser
