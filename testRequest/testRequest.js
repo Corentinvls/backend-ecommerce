@@ -8,8 +8,8 @@ const bcrypt = require('bcrypt')
 
 
 const product = {
-    title: "sample3",
-    description: "This is a _example3_ description",
+    title: "TEST",
+    description: "This is a TEST description",
     price: 10.99,
     ref: "AZERTY19COVID",
     gateways: [
@@ -20,7 +20,7 @@ const product = {
     ],
     image_url: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
     ratings: [{rating: 2, pseudo: "franky", comment: "that's weird"}],
-    categories: ["adventure", "rpg"],
+    categories: ["rpg"],
     type: "service",
     seller_pseudo: "jackylamoule",
     add_to_cart: 0,
@@ -98,6 +98,7 @@ async function create(collection, object) {
     await dbPath.insertOne(object).then((e) => console.log("New " + collection + " created : " + e.ops[0]._id)).catch((e) => console.log(e))
 }
 
+
 async function searchBy(collection, field, search) {
     await client.connect()
     const db = client.db('LeBonCovid')
@@ -138,6 +139,15 @@ async function getById(collection, id) {
     return result
 
 }
+async function getBy(collection, field, search){
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection(collection)
+    var query = {};
+    query[field] = search;
+    const result = await dbPath.find(query).toArray()
+    console.log(result)
+}
 
 async function list(collection) {
     await client.connect()
@@ -159,17 +169,40 @@ async function listOfOrdersProducts(id, sort) {
             {
                 $lookup: {
                     from: 'products',
-                    localField:'order',
-                    foreignField:'title',
-                    as:'infoList'
+                    localField: 'order',
+                    foreignField: 'title',
+                    as: 'infoList'
                 }
             },
             {$unwind: '$infoList'},
-            {$project: {order: 1, _id: 0,infoList:{title:1,description: 1,price:1,ref:1,image_url: 1,categories: 1,type: 1}}},
+            {
+                $project: {
+                    order: 1,
+                    _id: 0,
+                    infoList: {title: 1, description: 1, price: 1, ref: 1, image_url: 1, categories: 1, type: 1}
+                }
+            },
             {$sort: {order: sort}}
         ]).toArray()
     console.log(result)
     return result
+}
+
+async function showDistinct(collection,element){
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection(collection)
+    const result = await dbPath.distinct(element)
+    console.log(result)
+}
+
+async function showProductsByCategorie(categorie) {
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection('products')
+    const result = await
+         dbPath.find({categories: categorie}).toArray()
+    console.log(result)
 }
 
 async function update(collection, id, objectModif) {
@@ -198,13 +231,17 @@ async function push(collection, id, objectModif) {
 
 // list("products").catch()
 
-listOfOrdersProducts('5fae3a60035237a923dbc55d', -1).then()
+// listOfOrdersProducts('5fae3a60035237a923dbc55d', -1).then()
 
 // update("users","5fae3a60035237a923dbc55d",modif).then()
 
 //push("products","5fabfbce9f2d076e94e1819d",toPush).then()
 
 // logUser("zef", "Azerty1").then( )
+
+// showProductsByCategorie('adventure')
+// showDistinct('products','title')
+getBy('products','type','service')
 
 exports.create = create
 exports.createUser = createUser
