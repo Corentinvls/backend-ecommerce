@@ -40,8 +40,8 @@ async function testCreateProduct() {
                 "stripe"
             ],
             image_url: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmontpellier.citycrunch.fr%2Fwp-content%2Fuploads%2Fsites%2F7%2F2020%2F04%2Fmasquescoronavirus012.jpg&f=1&nofb=1",
-            ratings: [],
-            categories: ["masque", "santé"],
+            ratings: [{rating:4},{rating:2},{rating:2},{rating:2}],
+            categories: ["masque", "test","db"],
             type: "book",
             seller_pseudo: "DéDéRaoult",
             sells: 0
@@ -116,6 +116,6 @@ async function testAddMoney(user,money) {
       .catch(()=>{
           console.log("try to reload server");})*/
 //testCreateUser().then()
-testCreateProduct().then()
-//testAddToCart("5fad83ff57b5fdbadca5156b").then()
-//testAddMoney("5fad83ff57b5fdbadca5156b",-1000).then()
+//testCreateProduct().then()
+//testAddToCart("5fae7aae3da351c93958e8bf").then()
+//testAddMoney("5fae7aae3da351c93958e8bf",-5000).then()

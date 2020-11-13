@@ -37,7 +37,8 @@ router.get('/getBy/:field&:search', async (req, res, next) =>{
   const search = req.params.search
   console.log(field);
   console.log(search);
-  res.json( await dbServices.getBy("products",field,search));
+  const result =await dbServices.getBy("products",field,search)
+  res.json(result);
 });
 router.get('/price/:price', async (req, res, next) =>{
   const price = parseInt(req.params.price)

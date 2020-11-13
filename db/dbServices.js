@@ -30,8 +30,7 @@ async function getBy(collection, field, search) {
     const dbPath = db.collection(collection)
     var query = {};
     query[field] = search;
-    const result = await dbPath.find(query).toArray()
-    console.log(result)
+    return await dbPath.find(query).toArray()
 }
 
 async function logUser(username, password) {
@@ -84,9 +83,8 @@ async function findUserPassword(search) {
 async function getById(collection, id) {
     const db = await getConnection()
     const dbPath = db.collection(collection)
-    console.log(id)
+
     const result = await dbPath.findOne({"_id": new ObjectId(id)})
-    console.log(result);
     return result
 
 }
@@ -170,7 +168,7 @@ async function showDistinct(collection, field) {
     const db = await getConnection()
     const dbPath = db.collection(collection)
     const result = await dbPath.distinct(field)
-    console.log(result)
+    return result;
 }
 
 async function showProductsByCategorie(categorie) {
@@ -189,13 +187,13 @@ async function showProductsByCategorie(categorie) {
 
 //list("products").catch()
 
-//update("products","5fabfbce9f2d076e94e1819d",modif).then()
+//update("users","5fae7aae3da351c93958e8bf", {order:"test"}).then()
 
-//push("products","5fabfbce9f2d076e94e1819d",toPush).then()
+//push("users","5fae7aae3da351c93958e8bf", {order:{title:"test"}}).then()
 
 //remove("users","5fad57dd21a816b625d97b0e").then()
 
-//logUser("zef", "Azerty1").then( )
+//logUser("usafever@gmail.com", "Azerty1").then( )
 
 // showProductsByCategorie('adventure')
 
@@ -204,6 +202,7 @@ async function showProductsByCategorie(categorie) {
 //getBy('products','type','service')
 
 //filterPrice("products",10).catch()
+listOfOrdersProducts("5fae7aae3da351c93958e8bf",1)
 
 exports.create = create
 exports.createUser = createUser
