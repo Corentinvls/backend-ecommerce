@@ -130,13 +130,11 @@ async function push(collection, id, objectModif) {
     }).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
 
-async function filterLTEPrice(collection,filter){
+async function filterLTEPrice(collection,price){
     const db = await getConnection()
     const dbPath = db.collection(collection)
-    return await dbPath.find({"price":{$lte : filter}}).toArray()
+    return await dbPath.find({"price":{$lte : price}}).toArray()
 }
-
-
 
 
 async function listOfOrdersProducts(id, sort) {
@@ -168,10 +166,10 @@ async function listOfOrdersProducts(id, sort) {
     return result
 }
 
-async function showDistinct(collection, element) {
+async function showDistinct(collection, field) {
     const db = await getConnection()
     const dbPath = db.collection(collection)
-    const result = await dbPath.distinct(element)
+    const result = await dbPath.distinct(field)
     console.log(result)
 }
 

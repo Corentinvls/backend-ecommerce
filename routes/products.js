@@ -39,6 +39,14 @@ router.get('/getBy/:field&:search', async (req, res, next) =>{
   console.log(search);
   res.json( await dbServices.getBy("products",field,search));
 });
+router.get('/price/:price', async (req, res, next) =>{
+  const price = parseInt(req.params.price)
+  res.json( await dbServices.filterLTEPrice("products",price));
+});
+router.get('/list/:field', async (req, res, next) =>{
+  const field = req.params.field
+  res.json( await dbServices.showDistinct("products",field));
+});
 
 
 module.exports = router;

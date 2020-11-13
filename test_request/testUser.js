@@ -31,7 +31,7 @@ async function testCreateProduct() {
         {
             title: "pdf geste barrière",
             description: "un condensé de savoir qui récapitule la pub qu'on a tous vu en boucle",
-            price: 12.99,
+            price: 5,
             ref: "GEST19COVID",
             gateways: [
                 "paypal",
