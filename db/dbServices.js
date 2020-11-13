@@ -123,6 +123,15 @@ async function push(collection, id, objectModif) {
     }).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
 
+async function filterPrice(collection,filter){
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection(collection)
+    const result = await dbPath.findOne({"price":{$lt : filter}})
+    console.log(result);
+    return result
+}
+
 
 //create("users",user).catch()
 //checkIfUserExist("email","usa@gmail.co").catch()
@@ -138,7 +147,7 @@ async function push(collection, id, objectModif) {
 //remove("users","5fad57dd21a816b625d97b0e").then()
 
 //logUser("zef", "Azerty1").then( )
-
+filterPrice("products",10).catch()
 exports.create = create
 exports.createUser = createUser
 exports.searchBy = searchBy
