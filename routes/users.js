@@ -58,7 +58,12 @@ router.patch('/addToCart/:userId', async (req, res) => {
     await dbServices.push("users", userId, {cart:product})
     res.json("done")
 })
-
+router.patch('/addMoney/:id', async (req, res) => {
+    const id = req.params.id
+    const money =req.body
+    await dbServices.increment("users", id, money)
+    res.send(money.money + " add")
+})
 /*router.patch('/buy/:userId', async (req, res) => {
     const product = req.body
     const userId = req.params.userId

@@ -77,7 +77,14 @@ async function testAddToCart(UserId) {
             console.log(response.data);
         })
 }
-
+async function testAddMoney(user,money) {
+    await axios.patch('http://localhost:3000/users/addMoney/'+user,
+        {money:money} )
+        .then(function(response) {
+            // handle success
+            console.log(response.data);
+        })
+}
 
 /*  await axios.put('http://localhost:3000/users/coco',
       {
@@ -110,4 +117,5 @@ async function testAddToCart(UserId) {
           console.log("try to reload server");})*/
 //testCreateUser().then()
 //testCreateProduct().then()
-testAddToCart("5fad83ff57b5fdbadca5156b").then()
+//testAddToCart("5fad83ff57b5fdbadca5156b").then()
+testAddMoney("5fad83ff57b5fdbadca5156b",-1000).then()

@@ -98,6 +98,12 @@ async function update(collection, id, objectModif) {
     const dbPath = db.collection(collection)
     await dbPath.updateOne({"_id": new ObjectId(id)}, {$set: objectModif}).then((e) => console.log(e.result)).catch((e) => console.log(e))
 }
+async function increment(collection, id, objectModif) {
+    await client.connect()
+    const db = client.db('LeBonCovid')
+    const dbPath = db.collection(collection)
+    await dbPath.updateOne({"_id": new ObjectId(id)}, { $set: {"updatedAt": new Date()},$inc: objectModif}).then((e) => console.log(e.result)).catch((e) => console.log(e))
+}
 async function remove(collection, id) {
     await client.connect()
     const db = client.db('LeBonCovid')
@@ -141,3 +147,4 @@ exports.push = push
 exports.checkIfUserExist = checkIfUserExist
 exports.logUser=logUser
 exports.remove=remove
+exports.increment = increment
