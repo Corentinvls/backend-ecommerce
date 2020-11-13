@@ -28,6 +28,8 @@ async function logUser(username, password) {
     const match = await bcrypt.compare(password, passwordHash);
     if (match) {
         console.log("cest le bon pass")
+        const token = crypto.randomBytes(40).toString('hex')
+        console.log({success: true,token})
     }else{
         console.log("FAUX")
     }
